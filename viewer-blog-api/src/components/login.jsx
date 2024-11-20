@@ -1,13 +1,14 @@
 import { useRef } from "react"
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-export default function Login() {
+export default function Login({setUser}) {
   const username = useRef(null);
   const password = useRef(null);
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resonseObj = await fetch("http://localhost:3000/login", {
+    const responseObj = await fetch("http://localhost:3000/login", {
       mode: "cors",
       method: "POST", body: JSON.stringify({
         username: username.current.value,
@@ -20,8 +21,9 @@ export default function Login() {
         throw new Error("server error");
       }
       return response.json()})
-      console.log(resonseObj)
-      localStorage.setItem("Authorization", `Bearer: ${resonseObj.token}`)
+      console.log(responseObj)
+      localStorage.setItem("Authorization", `Bearer ${responseObj.token}`)
+      setUser(responseObj.user)
       navigate('/home');
   }
   return(<div>
@@ -35,4 +37,8 @@ export default function Login() {
       <button type="submit">Submit</button>
     </form>
   </div>)
+}
+
+Login.propTypes = {
+  setUser: PropTypes.func
 }

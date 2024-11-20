@@ -12,27 +12,48 @@ function App() {
   const {page} = useParams()
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState(null);
+  const [user, setUser] = useState(null);
+  console.log(posts)
+  function assignUser(userObj) {
+    setUser(userObj)
+  }
   useEffect(()=>{
-    fetch('http://localhost:3000/posts', {mode: 'cors'})
+    const token = localStorage.getItem("Authorization");
+    console.log({"Authorization": token})
+    fetch('http://localhost:3000/protected', {mode: 'cors', method:"GET", headers:{
+      "Authorization": token,
+      "Content-Type": "application/json"
+    }})
+    .then(response=>{ 
+      if (response.status === 401) {
+        setUser(null)
+        throw new Error("Expired token");
+      }
+      return response.json()})
+    .then(response=>setUser(response))
+    fetch('http://localhost:3000/posts', {mode: 'cors', method: "GET"})
     .then(response=>{ 
       if (response.status >= 400) {
         throw new Error("server error");
       }
       return response.json()})
     .then(response=>setPosts(response))
+    .catch(error=>console.log(error))
     .finally(()=> setLoading(false))
   }, [])
   return (
     <>
-      <Header />
+      <Header setUser={assignUser} user={user}/>
       {page === 'register' ? (
         <Register />
       ) : page === 'login' ? (
-        <Login />
+        <Login setUser={assignUser}/>
       ) : (
-        <User />,
         (loading && <p>Loading...</p>),
-        (posts && <Posts />)
+        <>
+          <User user={user}/>
+          <Posts posts={posts}/>
+        </>
       )}
     </>
   )

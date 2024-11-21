@@ -65,10 +65,10 @@ export default function Posts({posts, reload, user}) {
   }
   
   return(
-    <div>
+    <div className="content">
       {(posts && posts.length > 0)?
       (posts.map(post=>
-        <div key={post.id}>
+        <div key={post.id} className="post">
           <h2>{post.title}</h2>
           <p>{post.content}</p>
           {(post.updateAt)? (
@@ -76,9 +76,9 @@ export default function Posts({posts, reload, user}) {
           ):(
             <p>Created at {Date(post.createdAt)}</p>
           )}
-          <p>Comments</p>
+          <h3>Comments</h3>
           {post.comments.map(comment=>
-            <>
+            <div key={comment.id} className="comment">
               <p>{comment.author.username}:</p>
               <p>{comment.content}</p>
               {(comment.updateAt)? (
@@ -105,10 +105,11 @@ export default function Posts({posts, reload, user}) {
             
               </>):(<></>)}
               
-          </>
+          </div>
           )}
           <br></br>
-          <label>Leave a comment: <input ref={el =>commentContent.current[post.id] = el} type="text"></input><button onClick={()=>leaveComment(post.id)}>Submit Comment</button></label>
+          {user && <label>Leave a comment: <input ref={el =>commentContent.current[post.id] = el} type="text"></input><button onClick={()=>leaveComment(post.id)}>Submit Comment</button></label>}
+          <hr></hr>
           </div>
          )
       ) : (

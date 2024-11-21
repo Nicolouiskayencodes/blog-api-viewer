@@ -24,7 +24,7 @@ function App() {
     setReload(false)
     const token = localStorage.getItem("Authorization");
     console.log({"Authorization": token})
-    fetch('http://localhost:3000/protected', {mode: 'cors', method:"GET", headers:{
+    fetch('https://blog-api-backend-0ye2.onrender.com/protected', {mode: 'cors', method:"GET", headers:{
       "Authorization": token,
       "Content-Type": "application/json"
     }})
@@ -35,7 +35,7 @@ function App() {
       }
       return response.json()})
     .then(response=>setUser(response))
-    fetch('http://localhost:3000/posts', {mode: 'cors', method: "GET", headers:{
+    fetch('https://blog-api-backend-0ye2.onrender.com/posts', {mode: 'cors', method: "GET", headers:{
       "Content-Type": "application/json",
     }})
     .then(response=>{ 

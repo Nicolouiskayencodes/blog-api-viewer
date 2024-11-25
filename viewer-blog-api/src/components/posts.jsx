@@ -81,8 +81,8 @@ export default function Posts({posts, reload, user}) {
             <div key={comment.id} className="comment">
               <p>{comment.author.username}:</p>
               <p>{comment.content}</p>
-              {(comment.updateAt)? (
-                <p>Update at {Date(comment.updateAt)}</p>
+              {(comment.updateAt !== comment.createdAt)? (
+                <p>Updated at {Date(comment.updateAt)}</p>
               ):(
                 <p>Created at {Date(comment.createdAt)}</p>
               )}
